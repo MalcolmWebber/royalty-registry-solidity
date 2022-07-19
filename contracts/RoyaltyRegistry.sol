@@ -31,10 +31,14 @@ contract RoyaltyRegistry is ERC165, OwnableUpgradeable, IRoyaltyRegistry {
     }
 
     function importNiftyAddresses(address[] memory _legacyNiftyAddresses, address _legacyNiftyRegistry) public {
-        require(IRegistry(0x6e53130dDfF21E3BC963Ee902005223b9A202106).isValidNiftySender(msg.sender), "NiftyLegacyRegistry: invalid msg.sender");
+        //Ensure user is a valid sender from Nifty Registry.
+        require(INiftyRegistry(0x6e53130dDfF21E3BC963Ee902005223b9A202106).isValidNiftySender(msg.sender), "NiftyLegacyRegistry: invalid msg.sender");
+        //Ensure the included legacy registry address is the one we know of.
         require(_legacyNiftyRegistry == 0x44447A4E82ed33E42Ed53Fe0d2254B5D42b13fD0, "Invalid legacy registry.");
         for (uint256 i = 0; i < _legacyNiftyAddresses.length; i++) {
+            //Ensure the token address is a legacy address
             require(INiftyLegacyRegistry(_legacyNiftyRegistry).isLegacyAddress(_legacyNiftyAddresses[i]), "Address is not a legacy address.");
+            //Add this legacy registry address as the override for this token address
             _overrides[_legacyNiftyAddresses[i]] = _legacyNiftyRegistry;
         }
     }
