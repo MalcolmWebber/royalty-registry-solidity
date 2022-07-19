@@ -18,3 +18,8 @@ interface INiftyRegistry {
      */
     function isValidNiftySender(address sending_key) external view returns (bool);
 }
+
+
+interface INiftyLegacyRegistry {
+    function isLegacyAddress(address) external view returns(bool);
+}

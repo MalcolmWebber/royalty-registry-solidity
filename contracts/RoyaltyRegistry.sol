@@ -30,6 +30,15 @@ contract RoyaltyRegistry is ERC165, OwnableUpgradeable, IRoyaltyRegistry {
         __Ownable_init_unchained();
     }
 
+    function importNiftyAddresses(address[] memory _legacyNiftyAddresses, address _legacyNiftyRegistry) public {
+        require(IRegistry(0x6e53130dDfF21E3BC963Ee902005223b9A202106).isValidNiftySender(msg.sender), "NiftyLegacyRegistry: invalid msg.sender");
+        require(_legacyNiftyRegistry == 0x44447A4E82ed33E42Ed53Fe0d2254B5D42b13fD0, "Invalid legacy registry.");
+        for (uint256 i = 0; i < _legacyNiftyAddresses.length; i++) {
+            require(INiftyLegacyRegistry(_legacyNiftyRegistry).isLegacyAddress(_legacyNiftyAddresses[i]), "Address is not a legacy address.");
+            _overrides[_legacyNiftyAddresses[i]] = _legacyNiftyRegistry;
+        }
+    }
+
     /**
      * @dev See {IERC165-supportsInterface}.
      */
